@@ -11,41 +11,50 @@ import (
 	"time"
 )
 
-func main() {
-	daprHost := os.Getenv("DAPR_HOST")
-	if daprHost == "" {
-		daprHost = "http://localhost"
-	}
-	daprHttpPort := os.Getenv("DAPR_HTTP_PORT")
-	if daprHttpPort == "" {
-		daprHttpPort = "3500"
-	}
-	client := &http.Client{
-		Timeout: 15 * time.Second,
-	}
-	for i := 1; i <= 20; i++ {
-		order := `{"orderId":` + strconv.Itoa(i) + "}"
-		req, err := http.NewRequest("POST", daprHost+":"+daprHttpPort+"/orders", strings.NewReader(order))
-		if err != nil {
-			log.Fatal(err.Error())
-		}
+//var a string
+//var b chan int
 
+func main() {
+	var DAPR_HOST, DAPR_HTTP_PORT string
+	var okHost, okPort bool
+	if DAPR_HOST, okHost = os.LookupEnv("DAPR_HOST"); !okHost {
+		DAPR_HOST = "http://localhost"
+	}
+	if DAPR_HTTP_PORT, okPort = os.LookupEnv("DAPR_HTTP_PORT"); !okPort {
+		DAPR_HTTP_PORT = "3500"
+	}
+	for i := 1; i <= 10; i++ {
+		order := "{\"orderId\":" + strconv.Itoa(i) + "}"
+		client := &http.Client{}
+		req, err := http.NewRequest("POST", DAPR_HOST+":"+DAPR_HTTP_PORT+"/orders", strings.NewReader(order))
+		if err != nil {
+			fmt.Print(err.Error())
+			os.Exit(1)
+		}
 		// Adding app id as part of th header
 		req.Header.Add("dapr-app-id", "order-processor")
 
 		// Invoking a service
 		response, err := client.Do(req)
+
 		if err != nil {
-			log.Fatal(err.Error())
+			fmt.Print(err.Error())
+			os.Exit(1)
 		}
 
-		// Read the response
 		result, err := ioutil.ReadAll(response.Body)
 		if err != nil {
 			log.Fatal(err)
 		}
-		response.Body.Close()
 
-		fmt.Println("Order passed:", string(result))
+		fmt.Println("Order passed: ", string(result))
+		time.Sleep(5 * time.Second)
 	}
+
+	// block the service for daemon
+	block := make(chan int)
+	<-block
 }
+
+
+
