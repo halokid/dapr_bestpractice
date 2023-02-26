@@ -17,6 +17,8 @@ var sub = &common.Subscription{
 	Route:      "/orders",
 }
 
+// TODO: this is a `Sub` sample
+
 func main() {
 	appPort := os.Getenv("APP_PORT")
 	if appPort == "" {

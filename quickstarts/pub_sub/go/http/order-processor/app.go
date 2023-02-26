@@ -60,6 +60,11 @@ func postOrder(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// TODO: the `http` method just use http for get and process data, in this example
+// TODO: router `/dapr/subscribe` is use for get the `Topic` name `orders`, and use
+// TODO: this topic name `orders` to as the router `/orders` for post data, the handle
+// TODO: post http router as a `Subscription`, so this is not the common Pub/Sub we use
+
 func main() {
 	appPort := os.Getenv("APP_PORT")
 	if appPort == "" {
