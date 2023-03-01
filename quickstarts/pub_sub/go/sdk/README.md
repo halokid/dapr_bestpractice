@@ -10,6 +10,20 @@ This quickstart includes one publisher: Go client message generator `checkout`
 
 And one subscriber: Go subscriber `order-processor`
 
+### Test two subscription service, one publish service
+```bash
+
+# one sub service
+dapr run --app-port 6002 --app-id order-processor-sdk --app-protocol http --dapr-http-port 3501   -- ./order_processor_sdk_example
+
+# two sub service
+dapr run --app-port 6003 --app-id order-processor-sdk --app-protocol http --dapr-http-port 3502   -- ./order_processor_sdk_example
+
+# one pub service
+dapr run --app-id checkout-sdk --app-protocol http --dapr-http-port 3500   -- ./checkout_sdk_example
+```
+the test result is Robbin consumer the data, it is OK for default.
+
 ### Run Go message subscriber with Dapr
 
 1. Run the Go subscriber app with Dapr in the `order-processor` folder:
