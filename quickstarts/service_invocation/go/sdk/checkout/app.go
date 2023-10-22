@@ -7,12 +7,14 @@ import (
   dapr "github.com/dapr/go-sdk/client"
 )
 
+// TODO: dapr run --app-id caller --log-level debug go run .
+
 func main() {
   // create the client
   ctx := context.Background()
   client, err := dapr.NewClient()
   if err != nil {
-    panic(err)
+    panic(any(err))
   }
   defer client.Close()
 
@@ -20,9 +22,10 @@ func main() {
     ContentType: "text/plain",
     Data:        []byte("hellow"),
   }
-  resp, err := client.InvokeMethodWithContent(ctx, "neon_schedule", "ping", "post", content)
+  //resp, err := client.InvokeMethodWithContent(ctx, "neon_schedule", "ping", "post", content)
+  resp, err := client.InvokeMethodWithContent(ctx, "order-processor", "orders", "post", content)
   if err != nil {
-    panic(err)
+    panic(any(err))
   }
   fmt.Printf("service method invoked, response: %s\n", string(resp))
 
@@ -31,9 +34,14 @@ func main() {
     Operation: "create",
   }
   if err := client.InvokeOutputBinding(ctx, in); err != nil {
-    panic(err)
+    panic(any(err))
   }
   fmt.Println("output binding invoked")
 
   fmt.Println("DONE (CTRL+C to Exit)")
 }
+
+
+
+
+

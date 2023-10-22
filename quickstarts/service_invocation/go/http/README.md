@@ -31,6 +31,10 @@ dapr run \
   --app-protocol http \
   --dapr-http-port 3501 \
   -- go run .
+
+
+dapr run  --app-port 6001  --app-id order-processor --app-protocol http --dapr-http-port 3501 -- go run .
+
 ```
 
 <!-- END_STEP -->
@@ -57,6 +61,9 @@ dapr run \
   --app-id checkout \
   --dapr-http-port 3500 \
   -- go run .
+
+dapr run  --app-id checkout --dapr-http-port 3500 -- go run .
+
 ```
 
 <!-- END_STEP -->
