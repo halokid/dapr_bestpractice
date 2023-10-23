@@ -1,4 +1,4 @@
-module checkout_example
+module caller 
 
 go 1.19
 
