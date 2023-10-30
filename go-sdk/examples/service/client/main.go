@@ -32,27 +32,27 @@ func main() {
 	// create the client
 	client, err := dapr.NewClient()
 	if err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	defer client.Close()
 
 	// publish a message to the topic demo
 	if err := client.PublishEvent(ctx, pubsub, "demo", data); err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	fmt.Println("data published")
 
 	// save state with the key key1
 	fmt.Printf("saving data: %s\n", string(data))
 	if err := client.SaveState(ctx, store, "key1", data, nil); err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	fmt.Println("data saved")
 
 	// get state for key key1
 	item, err := client.GetState(ctx, store, "key1", nil)
 	if err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	fmt.Printf("data retrieved [key:%s etag:%s]: %s\n", item.Key, item.Etag, string(item.Value))
 
@@ -72,13 +72,13 @@ func main() {
 		},
 	}
 	if err := client.SaveBulkState(ctx, store, item2); err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	fmt.Println("data item saved")
 
 	// delete state for key key1
 	if err := client.DeleteState(ctx, store, "key1", nil); err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	fmt.Println("data deleted")
 
@@ -89,7 +89,7 @@ func main() {
 	}
 	resp, err := client.InvokeMethodWithContent(ctx, "serving", "echo", "post", content)
 	if err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	fmt.Printf("service method invoked, response: %s\n", string(resp))
 
@@ -98,7 +98,7 @@ func main() {
 		Operation: "create",
 	}
 	if err := client.InvokeOutputBinding(ctx, in); err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	fmt.Println("output binding invoked")
 
